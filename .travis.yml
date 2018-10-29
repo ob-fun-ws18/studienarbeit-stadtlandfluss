@@ -31,7 +31,7 @@ script:
 - stack --no-terminal test --haddock --no-haddock-deps --coverage
 - ln -s `stack path –local-doc-root` docs
 - stack bench --benchmark-arguments="-o docs/benchmarks.html"
-- mv `stack path –local-hpc-root` docs/hpc
+- ln -s `stack path –local-hpc-root` docs/hpc
 
 
 deploy:

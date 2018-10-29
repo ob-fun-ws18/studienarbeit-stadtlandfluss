@@ -30,7 +30,7 @@ script:
 # Build the package, its tests and run the tests
 - stack --no-terminal test --haddock --no-haddock-deps
 - ln -s `stack path –local-doc-root` docs
-- stack bench –benchmark-arguments= "-o docs/benchmarks.html"
+- stack bench --benchmark-arguments="-o docs/benchmarks.html"
 
 
 deploy:

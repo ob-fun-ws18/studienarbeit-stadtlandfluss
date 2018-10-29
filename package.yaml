@@ -48,3 +48,15 @@ tests:
     - StadtLandFluss
     - hspec
     - QuickCheck
+
+benchmarks:
+  StadtLandFluss-benchmark:
+    main: 		 Bench.hs
+    source-dirs: 	 benchmark
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - StadtLandFluss
+    - criterion

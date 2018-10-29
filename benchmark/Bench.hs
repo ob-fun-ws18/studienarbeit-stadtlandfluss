@@ -1,7 +1,7 @@
 module Main (main) where
 
-import Criterion.Main (bench, bgroup, defaultMain, nf)
-import Lib
+import            Criterion.Main (bench, bgroup, defaultMain, nf)
+import            Lib
 
 main :: IO ()
 main = defaultMain

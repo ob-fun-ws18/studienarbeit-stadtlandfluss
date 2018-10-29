@@ -29,7 +29,7 @@ install:
 script:
 # Build the package, its tests and run the tests
 - stack --no-terminal test --haddock --no-haddock-deps
-- mv `stack path --local-doc-root` docs/doc
+- ln -s `stack path –local-doc-root` docs
 
 
 deploy:

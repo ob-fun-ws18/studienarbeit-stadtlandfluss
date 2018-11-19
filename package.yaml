@@ -25,6 +25,7 @@ dependencies:
 - lens == 4.17
 - containers == 0.5.11.0
 - aeson == 1.4.1.0
+- lens-aeson == 1.0.2
 - text == 1.2.3.1
 
 

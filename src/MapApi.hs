@@ -31,11 +31,11 @@ sendQuery query =
          in return(getWith opts mapsUrl)
 
 
-
+-- Maybe rewrite to return a list of all results
 getLocation query  = do
     apiKey <- getEnv "BING_API_KEY"
-    opts <- return(defaults & param "query" .~ [pack(query)]
-                    & param "key" .~ [pack apiKey])
+    let opts = defaults & param "query" .~ [pack query]
+                        & param "key" .~ [pack apiKey]
     r <- getWith opts mapsUrl
     -- Todo find a way to reuse partial results (like the resource node)
     return( Location (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "name" . _String)

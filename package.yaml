@@ -27,6 +27,8 @@ dependencies:
 - aeson == 1.4.1.0
 - threepenny-gui == 0.8.3.0
 - random == 1.1
+- lens-aeson == 1.0.2
+- text == 1.2.3.1
 
 
 library:

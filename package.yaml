@@ -25,6 +25,8 @@ dependencies:
 - lens == 4.17
 - containers == 0.5.11.0
 - aeson == 1.4.1.0
+- threepenny-gui == 0.8.3.0
+- random == 1.1
 
 
 library:

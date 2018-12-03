@@ -10,6 +10,7 @@ import Control.Lens -- Lib used to access results from requests
 import Data.Aeson.Lens -- Json Access
 
 --TODO: Add setup information about env-var to top level readme
+--TODO: Maybe add funnctionallity to get web url for given request (https://msdn.microsoft.com/en-us/library/dn217138.aspx)
 
 data Result = Location { name :: Text,
                         entityType :: Text,

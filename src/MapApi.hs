@@ -12,13 +12,13 @@ import Data.Aeson.Lens -- Json Access
 --TODO: Add setup information about env-var to top level readme
 --TODO: Maybe add funnctionallity to get web url for given request (https://msdn.microsoft.com/en-us/library/dn217138.aspx)
 
-data Result = Location { name :: Text,
-                        entityType :: Text,
-                        confidence :: Text}
+data Location = Location { name :: String,
+                        entityType :: String,
+                        confidence :: String}
 
 -- Print a location result
-instance Show Result where
-    show (Location name entityType confidence) = unpack name ++ " (" ++ unpack entityType ++ ", Confidence: " ++ unpack confidence ++ ")"
+instance Show Location where
+    show (Location name entityType confidence) = "{" ++ name ++ " (" ++ entityType ++ ", Confidence: " ++ confidence ++ ")}"
 
 
 -- Main node of the rest request
@@ -31,14 +31,28 @@ sendQuery query =
                 & param "key" .~ [pack apiKey]
          in return(getWith opts mapsUrl)
 
+readName response index = response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "name" . _String
 
--- Maybe rewrite to return a list of all results
+readEntityType response index =  response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "entityType" . _String
+
+readConfidence response index =  response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "confidence" . _String
+
+numberOfResources response = response ^.. responseBody . key "resourceSets" . nth 0 . key "estimatedTotal"  . _Integer
+
+readLocation response index = Location
+                                (unpack (readName response index))
+                                (unpack (readEntityType response index))
+                                (unpack (readConfidence response index))
+
 getLocation query  = do
     apiKey <- getEnv "BING_API_KEY"
     let opts = defaults & param "query" .~ [pack query]
                         & param "key" .~ [pack apiKey]
-    r <- getWith opts mapsUrl
-    -- Todo find a way to reuse partial results (like the resource node)
-    return( Location (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "name" . _String)
-                     (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "entityType" . _String)
-                     (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "confidence" . _String))
+                        & param "c" .~ [pack "de"]
+                        & param "userRegion" .~ [pack "DE"]
+                        & param "userLocation" .~ [pack "48.153737,11.552366"]
+    response <- getWith opts mapsUrl
+    let numResult = (fromIntegral ((numberOfResources response) !! 0))
+        range =  [0..numResult-1]
+    return (Prelude.map (readLocation response) range)
+

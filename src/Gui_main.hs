@@ -5,6 +5,7 @@ import           Graphics.UI.Threepenny.Core
 import GameLogic
 
 import System.Random
+
 {-----------------------------------------------------------------------------
     Main
 ------------------------------------------------------------------------------}
@@ -54,10 +55,11 @@ mkDisplay = do
     result <- UI.div #. "result"
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
+    score <- UI.div #. "score" #+
+        [ UI.p # set UI.text "Spieler 1 Punkte: "]
 
-    table <- UI.table
-        #. "table"
-        #+ [ UI.tr #+
+    table <- UI.table #. "input-table" #+
+        [ UI.tr #+
             [ UI.th
             , UI.th # set UI.text "Spieler 1"
             , UI.th # set UI.text "Spieler 2"
@@ -65,36 +67,36 @@ mkDisplay = do
             , UI.th # set UI.text "Spieler 4"
             ]
         , UI.tr #+
-            [ UI.td # set UI.text "Stadt"
-            , UI.td #+
+            [ UI.th # set UI.text "Stadt"
+            , UI.td #. "input-field" #+
                 [ element inputCity1 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCity2 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCity3 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCity4 ]
             ]
         , UI.tr #+
-            [ UI.td # set UI.text "Land"
-            , UI.td #+
+            [ UI.th # set UI.text "Land"
+            , UI.td #. "input-field" #+
                 [ element inputCountry1 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCountry2 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCountry3 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputCountry4 ]
             ]
         , UI.tr #+
-            [ UI.td # set UI.text "Fluss"
-            , UI.td #+
+            [ UI.th # set UI.text "Fluss"
+            , UI.td #. "input-field" #+
                 [ element inputRiver1 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputRiver2 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputRiver3 ]
-            , UI.td #+
+            , UI.td #. "input-field" #+
                 [ element inputRiver4 ]
             ]
         ]
@@ -107,40 +109,98 @@ mkDisplay = do
         let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
 
         element result #+
-            [ UI.h5 # set UI.text "Ergebnis"
-            , UI.tr #+
-               [ UI.th
-               , UI.th # set UI.text "Spieler 1"
-               , UI.th # set UI.text "Spieler 2"
-               , UI.th # set UI.text "Spieler 3"
-               , UI.th # set UI.text "Spieler 4"
-               ]
-           , UI.tr #+
-               [ UI.td # set UI.text "Stadt"
-               , UI.td # set UI.text (snd (cities!!0))
-               , UI.td # set UI.text (snd (cities!!1))
-               , UI.td # set UI.text (snd (cities!!2))
-               , UI.td # set UI.text (snd (cities!!3))
-               ]
-           , UI.tr #+
-              [ UI.td # set UI.text "Land"
-              , UI.td # set UI.text (snd (countries!!0))
-              , UI.td # set UI.text (snd (countries!!1))
-              , UI.td # set UI.text (snd (countries!!2))
-              , UI.td # set UI.text (snd (countries!!3))
-              ]
-           , UI.tr #+
-             [ UI.td # set UI.text "Fluss"
-             , UI.td # set UI.text (snd (rivers!!0))
-             , UI.td # set UI.text (snd (rivers!!1))
-             , UI.td # set UI.text (snd (rivers!!2))
-             , UI.td # set UI.text (snd (rivers!!3))
-             ]
-           ]
+            [ UI.h5 #. "header-result" # set UI.text "Ergebnis"
+            , UI.table #. "result-table" #+
+                [ UI.tr #+
+                    [ UI.th #. "player"
+                    , UI.th #. "player" # set UI.text "Spieler 1"
+                    , UI.th #. "player" # set UI.text "Spieler 2"
+                    , UI.th #. "player" # set UI.text "Spieler 3"
+                    , UI.th #. "player" # set UI.text "Spieler 4"
+                    ]
+                , UI.tr #+
+                    [ UI.th #. "first-column"
+                    , UI.th #+
+                        [ UI.span #. "points" # set UI.text "Punkte"
+                        , UI.span #. "possibility" # set UI.text "Wahrscheinlichkeit"
+                        ]
+                    , UI.th #+
+                        [ UI.span #. "points" # set UI.text "Punkte"
+                        , UI.span #. "possibility" # set UI.text "Wahrscheinlichkeit"
+                        ]
+                    , UI.th #+
+                        [ UI.span #. "points" # set UI.text "Punkte"
+                        , UI.span #. "possibility" # set UI.text "Wahrscheinlichkeit"
+                        ]
+                    , UI.th #+
+                        [ UI.span #. "points" # set UI.text "Punkte"
+                        , UI.span #. "possibility" # set UI.text "Wahrscheinlichkeit"
+                        ]
+                    ]
+                , UI.tr #+
+                    [ UI.th #. "first-column" # set UI.text "Stadt"
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (cities!!0)))
+                        , UI.span #. "possibility" # set UI.text (snd (cities!!0))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (cities!!1)))
+                        , UI.span #. "possibility" # set UI.text (snd (cities!!1))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (cities!!2)))
+                        , UI.span #. "possibility" # set UI.text (snd (cities!!2))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (cities!!3)))
+                        , UI.span #. "possibility" # set UI.text (snd (cities!!3))
+                        ]
+                    ]
+                , UI.tr #+
+                    [ UI.th #. "first-column" # set UI.text "Land"
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (countries!!0)))
+                        , UI.span #. "possibility" # set UI.text (snd (countries!!0))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (countries!!1)))
+                        , UI.span #. "possibility" # set UI.text (snd (countries!!1))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (countries!!2)))
+                        , UI.span #. "possibility" # set UI.text (snd (countries!!2))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (countries!!3)))
+                        , UI.span #. "possibility" # set UI.text (snd (countries!!3))
+                        ]
+                    ]
+                , UI.tr #+
+                    [ UI.th #. "first-column" # set UI.text "Fluss"
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (rivers!!0)))
+                        , UI.span #. "possibility" # set UI.text (snd (rivers!!0))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (rivers!!1)))
+                        , UI.span #. "possibility" # set UI.text (snd (rivers!!1))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (rivers!!2)))
+                        , UI.span #. "possibility" # set UI.text (snd (rivers!!2))
+                        ]
+                    , UI.td #. "result-field" #+
+                        [ UI.span #. "points" # set UI.text (show (fst (rivers!!3)))
+                        , UI.span #. "possibility" # set UI.text (snd (rivers!!3))
+                        ]
+                    ]
+                ]
+            ]
 
     -- visual style
     UI.div #. "main_content" #+
-        [ element table
+        [ element score
+        , element table
         , element result
         , element submit
         ]

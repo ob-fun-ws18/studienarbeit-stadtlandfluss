@@ -3,6 +3,56 @@
     max-width: 80%;
 }
 
+table {
+    margin: 25px 0;
+}
+
+.input-table {
+    border: 1px solid gray;
+    border-radius: 2px;
+    width: 100%;
+    text-align: center;
+}
+
+.result-table {
+    width: 100%;
+    text-align: center;
+}
+
+td.input-field {
+    border: 1px solid gray;
+    border-radius: 2px;
+}
+
+.header-result {
+    margin-top: 35px;
+    border-top: 1px solid #d1d1d1;
+    padding-top: 25px;
+}
+
+input {
+    border: 0px solid white;
+}
+
+.points {
+    width: 40%;
+    display: inline-block;
+    background: #ddeaff
+}
+.possibility {
+    width: 60%;
+    display: inline-block;
+    background: #feffe2;
+}
+
+.player {
+    background: #e5e5e5;
+}
+
+.first-column {
+    background: #ddffde;
+}
+
 meta.foundation-version {
   font-family: "/5.5.3/"; }
 
@@ -1462,8 +1512,8 @@ input:not([type]), input[type="text"], input[type="password"], input[type="date"
   display: block;
   font-family: inherit;
   font-size: 0.875rem;
-  height: 2.3125rem;
-  margin: 0 0 1rem 0;
+  height: 30px;
+  /*margin: 0 0 1rem 0;*/
   padding: 0.5rem;
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -5657,12 +5707,12 @@ ul.off-canvas-list {
     max-width: 100% !important; }
     .f-dropdown.mega.open {
       left: 0 !important; }
-
+/*
 table {
   background: #FFFFFF;
   border: solid 1px #DDDDDD;
   margin-bottom: 1.25rem;
-  table-layout: auto; }
+  table-layout: auto; } */
   table caption {
     background: transparent;
     color: #222222;
@@ -5685,13 +5735,13 @@ table {
       font-weight: bold;
       padding: 0.5rem 0.625rem 0.625rem; }
   table tr th,
-  table tr td {
+  /*table tr td {
     color: #222222;
     font-size: 0.875rem;
     padding: 0.5625rem 0.625rem;
-    text-align: left; }
+    text-align: left; } */
   table tr.even, table tr.alt, table tr:nth-of-type(even) {
-    background: #F9F9F9; }
+    /*background: #F9F9F9; }*/
   table thead tr th,
   table tfoot tr th,
   table tfoot tr td,

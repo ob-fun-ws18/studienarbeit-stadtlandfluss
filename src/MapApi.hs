@@ -12,13 +12,13 @@ import Data.Aeson.Lens -- Json Access
 --TODO: Add setup information about env-var to top level readme
 --TODO: Maybe add funnctionallity to get web url for given request (https://msdn.microsoft.com/en-us/library/dn217138.aspx)
 
-data Result = Location { name :: Text,
-                        entityType :: Text,
-                        confidence :: Text}
+data Location = Location { name :: String,
+                        entityType :: String,
+                        confidence :: String}
 
 -- Print a location result
-instance Show Result where
-    show (Location name entityType confidence) = "{" ++ unpack name ++ " (" ++ unpack entityType ++ ", Confidence: " ++ unpack confidence ++ ")}"
+instance Show Location where
+    show (Location name entityType confidence) = "{" ++ name ++ " (" ++ entityType ++ ", Confidence: " ++ confidence ++ ")}"
 
 
 -- Main node of the rest request
@@ -40,9 +40,9 @@ readConfidence response index =  response ^. responseBody . key "resourceSets" .
 numberOfResources response = response ^.. responseBody . key "resourceSets" . nth 0 . key "estimatedTotal"  . _Integer
 
 readLocation response index = Location
-                                (readName response index)
-                                (readEntityType response index)
-                                (readConfidence response index)
+                                (unpack (readName response index))
+                                (unpack (readEntityType response index))
+                                (unpack (readConfidence response index))
 
 getLocation query  = do
     apiKey <- getEnv "BING_API_KEY"

@@ -30,59 +30,85 @@ setup window = do
 
 mkDisplay :: UI Element
 mkDisplay = do
-    one   <- UI.button    # set UI.text "1 Player"
-    two   <- UI.button    # set UI.text "2 Player"
-    three <- UI.button    # set UI.text "3 Player"
-    four  <- UI.button    # set UI.text "4 Player"
-    inputCity <- UI.input
-    inputCountry <- UI.input
-    inputRiver <- UI.input
+
+    -- city inputs
+    inputCity1 <- UI.input # set (attr "placeholder") "Stadt"
+    inputCity2 <- UI.input # set (attr "placeholder") "Stadt"
+    inputCity3 <- UI.input # set (attr "placeholder") "Stadt"
+    inputCity4 <- UI.input # set (attr "placeholder") "Stadt"
+
+    -- country inputs
+    inputCountry1 <- UI.input # set (attr "placeholder") "Land"
+    inputCountry2 <- UI.input # set (attr "placeholder") "Land"
+    inputCountry3 <- UI.input # set (attr "placeholder") "Land"
+    inputCountry4 <- UI.input # set (attr "placeholder") "Land"
+
+    -- river inputs
+    inputRiver1 <- UI.input # set (attr "placeholder") "Fluss"
+    inputRiver2 <- UI.input # set (attr "placeholder") "Fluss"
+    inputRiver3 <- UI.input # set (attr "placeholder") "Fluss"
+    inputRiver4 <- UI.input # set (attr "placeholder") "Fluss"
+
     submit <- UI.button   # set UI.text "submit"
-    main_content <- UI.div #. "main-content"
+    result <- UI.div #. "result"
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
 
-    -- input field for player one
-    playerOneInput <- UI.div
-        #. "input-field"
-        #+ [ UI.p # set UI.text "Stadt"
-           , element inputCity
-           , UI.p # set UI.text "Land"
-           , element inputCountry
-           , UI.p # set UI.text "Fluss"
-           , element inputRiver
-           ]
+    table <- UI.div
+        #. "table"
+        #+ [ UI.tr #+
+            [ UI.th # set UI.text "Spieler 1"
+            , UI.th # set UI.text "Spieler 2"
+            , UI.th # set UI.text "Spieler 3"
+            , UI.th # set UI.text "Spieler 4"
+            ]
+        , UI.tr #+
+            [ UI.td #+
+                [ element inputCity1 ]
+            , UI.td #+
+                [ element inputCity2 ]
+            , UI.td #+
+                [ element inputCity3 ]
+            , UI.td #+
+                [ element inputCity4 ]
+            ]
+        , UI.tr #+
+            [ UI.td #+
+                [ element inputCountry1 ]
+            , UI.td #+
+                [ element inputCountry2 ]
+            , UI.td #+
+                [ element inputCountry3 ]
+            , UI.td #+
+                [ element inputCountry4 ]
+            ]
+        , UI.tr #+
+            [ UI.td #+
+                [ element inputRiver1 ]
+            , UI.td #+
+                [ element inputRiver2 ]
+            , UI.td #+
+                [ element inputRiver3 ]
+            , UI.td #+
+                [ element inputRiver4 ]
+            ]
+        ]
+
 
     --on UI.click randomLetterButton $ \_ -> do
         --randomLetter <- randomRIO ('a','z')
         --element main_content #+ [UI.div # set UI.text "test"]
 
-    -- click button 1 Player
-    on UI.click one $ \_ -> do
-        element main_content #+ [element playerOneInput, element submit]
-
-    -- click button 2 Player
-    on UI.click two $ \_ -> do
-        element main_content #+ [element playerOneInput, element submit]
-
-    -- click button 3 Player
-    on UI.click three $ \_ -> do
-        element main_content #+ [element playerOneInput, element submit]
-
-    -- click button 4 Player
-    on UI.click four $ \_ -> do
-        element main_content #+ [element playerOneInput, element submit]
-
     -- click button submit
     on UI.click submit $ \_ -> do
-        city <- get value inputCity
-        country <- get value inputCountry
-        river <- get value inputRiver
-        element main_content #+ [string city, string country, string river]
+        city <- get value inputCity1
+        country <- get value inputCountry1
+        river <- get value inputRiver1
+        element result #+ [string city, string country, string river]
 
     -- visual style
     UI.div #. "main_content" #+
-        [ UI.ul #. "button-group round" #+
-            map (\x -> UI.li #+ [element x]) [one, two, three, four],
-            element main_content
+        [ element table
+        , element result
+        , element submit
         ]

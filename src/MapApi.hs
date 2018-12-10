@@ -18,7 +18,7 @@ data Result = Location { name :: Text,
 
 -- Print a location result
 instance Show Result where
-    show (Location name entityType confidence) = unpack name ++ " (" ++ unpack entityType ++ ", Confidence: " ++ unpack confidence ++ ")"
+    show (Location name entityType confidence) = "{" ++ unpack name ++ " (" ++ unpack entityType ++ ", Confidence: " ++ unpack confidence ++ ")}"
 
 
 -- Main node of the rest request
@@ -31,14 +31,19 @@ sendQuery query =
                 & param "key" .~ [pack apiKey]
          in return(getWith opts mapsUrl)
 
-readName response index = response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "name" . _String
+readName response index = response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "name" . _String
 
-readEntityType response index =  response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "entityType" . _String
+readEntityType response index =  response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "entityType" . _String
 
-readConfidence response index =  response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "confidence" . _String
+readConfidence response index =  response ^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "confidence" . _String
 
+numberOfResources response = response ^.. responseBody . key "resourceSets" . nth 0 . key "estimatedTotal"  . _Integer
 
--- Maybe rewrite to return a list of all results
+readLocation response index = Location
+                                (readName response index)
+                                (readEntityType response index)
+                                (readConfidence response index)
+
 getLocation query  = do
     apiKey <- getEnv "BING_API_KEY"
     let opts = defaults & param "query" .~ [pack query]
@@ -46,7 +51,8 @@ getLocation query  = do
                         & param "c" .~ [pack "de"]
                         & param "userRegion" .~ [pack "DE"]
                         & param "userLocation" .~ [pack "48.153737,11.552366"]
-    r <- getWith opts mapsUrl
-    return( Location (readName r 0)
-                     (readEntityType r 0)
-                     (readConfidence r 0))
+    response <- getWith opts mapsUrl
+    let numResult = (fromIntegral ((numberOfResources response) !! 0))
+        range =  [0..numResult-1]
+    return (Prelude.map (readLocation response) range)
+

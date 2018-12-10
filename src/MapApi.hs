@@ -31,14 +31,22 @@ sendQuery query =
                 & param "key" .~ [pack apiKey]
          in return(getWith opts mapsUrl)
 
+readName response index = response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "name" . _String
+
+readEntityType response index =  response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "entityType" . _String
+
+readConfidence response index =  response^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth index . key "confidence" . _String
+
 
 -- Maybe rewrite to return a list of all results
 getLocation query  = do
     apiKey <- getEnv "BING_API_KEY"
     let opts = defaults & param "query" .~ [pack query]
                         & param "key" .~ [pack apiKey]
+                        & param "c" .~ [pack "de"]
+                        & param "userRegion" .~ [pack "DE"]
+                        & param "userLocation" .~ [pack "48.153737,11.552366"]
     r <- getWith opts mapsUrl
-    -- Todo find a way to reuse partial results (like the resource node)
-    return( Location (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "name" . _String)
-                     (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "entityType" . _String)
-                     (r^. responseBody . key "resourceSets" . nth 0 . key "resources" . nth 0 . key "confidence" . _String))
+    return( Location (readName r 0)
+                     (readEntityType r 0)
+                     (readConfidence r 0))

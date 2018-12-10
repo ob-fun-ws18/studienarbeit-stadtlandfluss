@@ -44,15 +44,18 @@ readLocation response index = Location
                                 (unpack (readEntityType response index))
                                 (unpack (readConfidence response index))
 
-getLocation query  = do
-    apiKey <- getEnv "BING_API_KEY"
-    let opts = defaults & param "query" .~ [pack query]
-                        & param "key" .~ [pack apiKey]
-                        & param "c" .~ [pack "de"]
-                        & param "userRegion" .~ [pack "DE"]
-                        & param "userLocation" .~ [pack "48.153737,11.552366"]
-    response <- getWith opts mapsUrl
-    let numResult = (fromIntegral ((numberOfResources response) !! 0))
-        range =  [0..numResult-1]
-    return (Prelude.map (readLocation response) range)
+getLocation query  = if query == ""
+                        then return []
+                        else
+                            do
+                                apiKey <- getEnv "BING_API_KEY"
+                                let opts = defaults & param "query" .~ [pack query]
+                                                    & param "key" .~ [pack apiKey]
+                                                    & param "c" .~ [pack "de"]
+                                                    & param "userRegion" .~ [pack "DE"]
+                                                    & param "userLocation" .~ [pack "48.153737,11.552366"]
+                                response <- getWith opts mapsUrl
+                                let numResult = (fromIntegral ((numberOfResources response) !! 0))
+                                    range =  [0..numResult-1]
+                                return (Prelude.map (readLocation response) range)
 

@@ -3,12 +3,8 @@ module GameLogic where --(checkCity, checkCountry, checkRiver, currentScores) wh
 import MapApi
 import Data.Maybe
 
-data Answer = Answer { location :: IO (Maybe Location), query :: String}
--- instance Show Answer where
---    show (Answer loc query) = "{" ++ (maybe "<No Location found>" (name) loc) ++ "}"
 
-
--- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt)
+-- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt). For others see bing api doc
 
 checkCity :: [string] -> [(Int, String)]
 checkCity cities = [(42, "high"), (0, "invalid"), (20, "high"), (10, "low")]
@@ -32,7 +28,6 @@ evaluateAnswer :: String -> [String] -> String -> IO (Int, String)
 evaluateAnswer queryType allQueries query =
         do locations <- getLocation query
            return (scoreAnswer queryType locations query allQueries)
-
 
 
 scoreAnswer :: String -> [Location] -> String -> [String] -> (Int, String)

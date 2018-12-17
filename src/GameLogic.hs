@@ -47,49 +47,19 @@ bestMatch :: String -> [Location] -> Maybe Location
 bestMatch expectedType locations = listToMaybe (filter (isType expectedType) locations)
 
 isType :: String -> Location -> Bool
-isType expetected location = (entityType location) == expetected
+isType expetected location = entityType location == expetected
 
 calcBonusFactor :: String -> [String] -> Int
-calcBonusFactor query allQueries = if (length (filter (== query) allQueries)) > 1
-                                    then 1 -- Answer is not unique
-                                    else if (length (filter (== "") allQueries)) == (length allQueries) - 1
-                                            then 4 -- query was the only answer
-                                            else 2 -- query was unique
+calcBonusFactor query allQueries | length (filter (== query) allQueries) > 1 = 1 -- Duplicate answer
+                                 | length (filter (== "") allQueries) == length allQueries - 1 = 4 -- Only answer
+                                 | otherwise = 2 -- Unique answer
 
 -- currently unused, if too many false answer are accepted filtering out "low" results might help
 hasConfidence :: String -> Location -> Bool
-hasConfidence expected location = (confidence location) == expected
-{-|
-tmp inputs = do
-        answers <- map (Answer 10) inputs
-        answers <- map (checkForEmpty) [answers]
-        answers <- map (checkUniques [answers]) [answers]
-        return answers
-      --  answers <- map ()
-checkUniques :: [Answer] -> Answer -> Answer
-checkUniques allAnswers (Answer oldScore inQuery)
-    = let allQueries = map query allAnswers
-          newScore = if (length (filter (== inQuery) allQueries)) > 1
-                        then oldScore
-                        else oldScore * 2
-        in Answer newScore inQuery
-
-tmpBla allAnswers (Answer oldScore inQuery)
-    = let allQueries = map query allAnswers
-         in length (filter (== inQuery) allQueries)
-
-
-checkForEmpty :: Answer -> Answer
-checkForEmpty (Answer points query) = if query == ""
-                                        then (Answer 0 query)
-                                        else (Answer points query)
-
-
-contains list member = (filter (== member) list) /= []
--}
-
+hasConfidence expected location = confidence location == expected
 
 
 
 currentScores :: [Int]
 currentScores = [300, 0, 42, 30]
+-- TODO: Find out a good way to store scores

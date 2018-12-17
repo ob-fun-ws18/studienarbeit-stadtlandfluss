@@ -55,7 +55,7 @@ getLocation query  = if query == ""
                                                     & param "userRegion" .~ [pack "DE"]
                                                     & param "userLocation" .~ [pack "48.153737,11.552366"]
                                 response <- getWith opts mapsUrl
-                                let numResult = (fromIntegral ((numberOfResources response) !! 0))
+                                let numResult = fromIntegral (Prelude.head (numberOfResources response))
                                     range =  [0..numResult-1]
                                 return (Prelude.map (readLocation response) range)
 

@@ -1,4 +1,4 @@
-module Gui_main where
+module GuiMain where
 
 import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
@@ -9,7 +9,7 @@ import System.Random
     Main
 ------------------------------------------------------------------------------}
 
-gui_main = startGUI defaultConfig { jsStatic = Just "." } setup
+guiMain = startGUI defaultConfig { jsStatic = Just "." } setup
 
 setup :: Window -> UI ()
 setup window = do
@@ -117,21 +117,21 @@ mkDisplay = do
                ]
            , UI.tr #+
                [ UI.td # set UI.text "Stadt"
-               , UI.td # set UI.text (snd (cities!!0))
+               , UI.td # set UI.text (snd (head cities))
                , UI.td # set UI.text (snd (cities!!1))
                , UI.td # set UI.text (snd (cities!!2))
                , UI.td # set UI.text (snd (cities!!3))
                ]
            , UI.tr #+
               [ UI.td # set UI.text "Land"
-              , UI.td # set UI.text (snd (countries!!0))
+              , UI.td # set UI.text (snd (head countries))
               , UI.td # set UI.text (snd (countries!!1))
               , UI.td # set UI.text (snd (countries!!2))
               , UI.td # set UI.text (snd (countries!!3))
               ]
            , UI.tr #+
              [ UI.td # set UI.text "Fluss"
-             , UI.td # set UI.text (snd (rivers!!0))
+             , UI.td # set UI.text (snd (head rivers))
              , UI.td # set UI.text (snd (rivers!!1))
              , UI.td # set UI.text (snd (rivers!!2))
              , UI.td # set UI.text (snd (rivers!!3))

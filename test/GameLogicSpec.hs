@@ -8,7 +8,7 @@ import MapApi
 -- Note: not all functions of the Gamelogic are tested, because some rely on IO-Calls to the maps api.
 
 spec :: Spec
-spec = do
+spec =
  describe "scoreAnswer" $ do
   it "gives 0 points if no location is found" $
    fst (scoreAnswer "River" [] "" ["", "isar", "donau"]) `shouldBe` 0

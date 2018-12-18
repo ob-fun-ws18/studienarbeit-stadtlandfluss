@@ -10,4 +10,4 @@ To use this project a valid Bing Maps Api Key is required!
 
 A free Api Key can be requested at: https://www.bingmapsportal.com/
 
-For the Code to work properly a the key needs to be stored in the environment variable: "BING_API_KEY".
+For the Code to work properly the key needs to be stored in the environment variable: "BING_API_KEY".

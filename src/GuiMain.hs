@@ -1,16 +1,15 @@
-module Gui_main where
+module GuiMain where
 
 import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
 import GameLogic
 
 import System.Random
-
 {-----------------------------------------------------------------------------
     Main
 ------------------------------------------------------------------------------}
 
-gui_main = startGUI defaultConfig { jsStatic = Just "." } setup
+guiMain = startGUI defaultConfig { jsStatic = Just "." } setup
 
 round :: Int
 round = 1
@@ -156,8 +155,8 @@ mkDisplay = do
                 , UI.tr #+
                     [ UI.th #. "first-column" # set UI.text "Stadt"
                     , UI.td #. "result-field" #+
-                        [ UI.span #. "points" # set UI.text (show (fst (cities!!0)))
-                        , UI.span #. "possibility" # set UI.text (snd (cities!!0))
+                        [ UI.span #. "points" # set UI.text (show (fst (head cities)))
+                        , UI.span #. "possibility" # set UI.text (snd (head cities))
                         ]
                     , UI.td #. "result-field" #+
                         [ UI.span #. "points" # set UI.text (show (fst (cities!!1)))
@@ -175,8 +174,8 @@ mkDisplay = do
                 , UI.tr #+
                     [ UI.th #. "first-column" # set UI.text "Land"
                     , UI.td #. "result-field" #+
-                        [ UI.span #. "points" # set UI.text (show (fst (countries!!0)))
-                        , UI.span #. "possibility" # set UI.text (snd (countries!!0))
+                        [ UI.span #. "points" # set UI.text (show (fst (head countries)))
+                        , UI.span #. "possibility" # set UI.text (snd (head countries))
                         ]
                     , UI.td #. "result-field" #+
                         [ UI.span #. "points" # set UI.text (show (fst (countries!!1)))
@@ -194,8 +193,8 @@ mkDisplay = do
                 , UI.tr #+
                     [ UI.th #. "first-column" # set UI.text "Fluss"
                     , UI.td #. "result-field" #+
-                        [ UI.span #. "points" # set UI.text (show (fst (rivers!!0)))
-                        , UI.span #. "possibility" # set UI.text (snd (rivers!!0))
+                        [ UI.span #. "points" # set UI.text (show (fst (head rivers)))
+                        , UI.span #. "possibility" # set UI.text (snd (head rivers))
                         ]
                     , UI.td #. "result-field" #+
                         [ UI.span #. "points" # set UI.text (show (fst (rivers!!1)))

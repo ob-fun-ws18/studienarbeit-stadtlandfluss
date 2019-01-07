@@ -26,7 +26,5 @@ isType expetected location = (entityType location) == expetected
 hasConfidence :: String -> Location -> Bool
 hasConfidence expected location = (confidence location) == expected
 
-
-
 currentScores :: [Int]
 currentScores = [300, 0, 42, 30]

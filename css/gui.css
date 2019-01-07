@@ -7,6 +7,15 @@ table {
     margin: 25px 0;
 }
 
+.scores {
+    margin-right: 15px;
+}
+
+.scores-heading {
+    margin-right: 25px;
+    font-weight: bold;
+}
+
 .input-table {
     border: 1px solid gray;
     border-radius: 2px;
@@ -3788,7 +3797,7 @@ p {
   font-size: 1rem;
   font-weight: normal;
   line-height: 1.6;
-  margin-bottom: 1.25rem;
+  /*margin-bottom: 1.25rem;*/
   text-rendering: optimizeLegibility; }
   p.lead {
     font-size: 1.21875rem;

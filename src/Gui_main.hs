@@ -12,6 +12,9 @@ import System.Random
 
 gui_main = startGUI defaultConfig { jsStatic = Just "." } setup
 
+round :: Int
+round = 1
+
 setup :: Window -> UI ()
 setup window = do
     return window # set UI.title "Stadt - Land - Fluss"
@@ -56,7 +59,12 @@ mkDisplay = do
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
     score <- UI.div #. "score" #+
-        [ UI.p # set UI.text "Spieler 1 Punkte: "]
+        [ UI.p #. "scores-heading" # set UI.text ("Runde 1")
+        , UI.span #. "scores" # set UI.text ("Spieler 1 Punkte: " ++(show (currentScores!!0)))
+        , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
+        , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
+        , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
+        ]
 
     table <- UI.table #. "input-table" #+
         [ UI.tr #+
@@ -107,6 +115,14 @@ mkDisplay = do
         let cities = checkCity [get value inputCity1, get value inputCity2, get value inputCity3, get value inputCity4]
         let countries = checkCountry [get value inputCountry1, get value inputCountry2, get value inputCountry3, get value inputCountry4]
         let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
+
+        element score #+
+            [ UI.p #. "scores-heading" # set UI.text (show (last increase [1]))
+            , UI.span #. "scores" # set UI.text ("Spieler 1 Punkte: " ++(show (currentScores!!0)))
+            , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
+            , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
+            , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
+            ]
 
         element result #+
             [ UI.h5 #. "header-result" # set UI.text "Ergebnis"

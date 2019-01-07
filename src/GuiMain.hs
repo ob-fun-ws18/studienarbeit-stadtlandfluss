@@ -108,15 +108,15 @@ mkDisplay = do
             ]
         ]
 
-
     -- click button submit
     on UI.click submit $ \_ -> do
+        -- hier auf IO aendern
         let cities = checkCity [get value inputCity1, get value inputCity2, get value inputCity3, get value inputCity4]
         let countries = checkCountry [get value inputCountry1, get value inputCountry2, get value inputCountry3, get value inputCountry4]
         let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
 
         element score #+
-            [ UI.p #. "scores-heading" # set UI.text (show (last increase [1]))
+            [ UI.p #. "scores-heading" # set UI.text "Runde 2"
             , UI.span #. "scores" # set UI.text ("Spieler 1 Punkte: " ++(show (currentScores!!0)))
             , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
             , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))

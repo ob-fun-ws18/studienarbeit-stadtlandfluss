@@ -8,6 +8,9 @@ and it allows the scoring of answers.
 
 module GameLogic where --(checkCity, checkCountry, checkRiver, currentScores) where
 
+import qualified Graphics.UI.Threepenny      as UI
+import           Graphics.UI.Threepenny.Core
+
 import MapApi
 import Data.Maybe
 

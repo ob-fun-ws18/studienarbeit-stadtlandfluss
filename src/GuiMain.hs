@@ -291,8 +291,8 @@ mkDisplay = do
 
     -- visual style
     UI.div #. "main_content" #+
-        [ element score
-        , element result
+        [ element result
         , element table
+        , element score
         , element submit
         ]

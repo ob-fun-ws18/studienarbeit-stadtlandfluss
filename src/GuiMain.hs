@@ -118,9 +118,19 @@ mkDisplay = do
         city3 <- get value inputCity3
         city4 <- get value inputCity4
 
-        let cities = checkCityIo [city1, city2, city3, city4]
-        let countries = checkCountry [get value inputCountry1, get value inputCountry2, get value inputCountry3, get value inputCountry4]
-        let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
+        country1 <- get value inputCountry1
+        country2 <- get value inputCountry2
+        country3 <- get value inputCountry3
+        country4 <- get value inputCountry4
+
+        river1 <- get value inputRiver1
+        river2 <- get value inputRiver2
+        river3 <- get value inputRiver3
+        river4 <- get value inputRiver4
+
+        cities <- liftIO (checkCityIo [city1, city2, city3,city4])
+        countries <- liftIO (checkCountryIo [country1, country2, country3, country4])
+        rivers <- liftIO (checkRiverIo [river1, river2, river3, river4])
 
         element score #+
             [ UI.p #. "scores-heading" # set UI.text "Runde 2"

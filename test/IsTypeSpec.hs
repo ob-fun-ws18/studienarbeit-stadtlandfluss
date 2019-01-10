@@ -9,8 +9,8 @@ import MapApi
 spec :: Spec
 spec = describe "isType" $ do
         it "returns true if type matches" $
-            (isType "River" (Location "Isar" "River" "high"))
+            isType "River" (Location "Isar" "River" "high")
                 `shouldBe` True
         it "returns false if type does not match" $
-            (isType "River" (Location "Germany" "CityRegion" "low"))
+            isType "River" (Location "Germany" "CityRegion" "low")
                 `shouldBe` False

@@ -29,6 +29,7 @@ dependencies:
 - random == 1.1
 - lens-aeson == 1.0.2
 - text == 1.2.3.1
+- random-strings == 0.1.1.0
 
 
 library:

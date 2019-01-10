@@ -55,14 +55,19 @@ mkDisplay = do
     inputRiver3 <- UI.input # set (attr "placeholder") "Fluss"
     inputRiver4 <- UI.input # set (attr "placeholder") "Fluss"
 
+    score1 <- UI.input
+        # set UI.enabled False
+        # set UI.value "0"
+
     submit <- UI.button   # set UI.text "submit"
     result <- UI.div #. "result"
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
     score <- UI.div #. "score" #+
         [ UI.p #. "scores-heading" # set UI.text ("Runde 1")
-        , UI.span #. "scores" # set UI.text ("Spieler 1 Punkte: " ++(show (currentScores!!0)))
-        , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
+        , UI.span #. "scores" #+
+            [ element score1 ]
+        , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!1)))
         , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
         , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
         ]
@@ -113,6 +118,8 @@ mkDisplay = do
     -- click button submit
     on UI.click submit $ \_ -> do
 
+
+
         city1 <- get value inputCity1
         city2 <- get value inputCity2
         city3 <- get value inputCity3
@@ -132,9 +139,17 @@ mkDisplay = do
         countries <- liftIO (checkCountry [country1, country2, country3, country4])
         rivers <- liftIO (checkRiver [river1, river2, river3, river4])
 
+        oldScore1 <- get value score1
+        let oldScoreInt1 = read oldScore1 :: Int
+        let plusPoints1 = fst (head cities) :: Int
+        let newScore1 = oldScoreInt1 + plusPoints1
+
+        element score1 # set UI.value (show newScore1)
+
         element score #+
             [ UI.p #. "scores-heading" # set UI.text "Runde 2"
-            , UI.span #. "scores" # set UI.text ("Spieler 1 Punkte: " ++(show (currentScores!!0)))
+            , UI.span #. "scores" #+
+                [ element score1 ]
             , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
             , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
             , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
@@ -232,7 +247,7 @@ mkDisplay = do
     -- visual style
     UI.div #. "main_content" #+
         [ element score
-        , element table
         , element result
+        , element table
         , element submit
         ]

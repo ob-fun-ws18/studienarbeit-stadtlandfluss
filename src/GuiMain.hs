@@ -55,36 +55,44 @@ mkDisplay = do
     inputRiver3 <- UI.input # set (attr "placeholder") "Fluss"
     inputRiver4 <- UI.input # set (attr "placeholder") "Fluss"
 
+    randomLetter <- liftIO (getRandomChar)
+    let letterString = [randomLetter]
+
     -- scores
-    score1 <- UI.input
+    score1 <- UI.input #. "score-field"
         # set UI.enabled False
         # set UI.value "0"
 
-    score2 <- UI.input
+    score2 <- UI.input #. "score-field"
         # set UI.enabled False
         # set UI.value "0"
 
-    score3 <- UI.input
+    score3 <- UI.input #. "score-field"
         # set UI.enabled False
         # set UI.value "0"
 
-    score4 <- UI.input
+    score4 <- UI.input #. "score-field"
         # set UI.enabled False
         # set UI.value "0"
+
+    letter <- UI.input
+        # set UI.enabled False
+        # set UI.value letterString
 
     submit <- UI.button   # set UI.text "submit"
-    result <- UI.div #. "result"
+    result <- UI.div #. "result" #+
+        [ UI.h3 # set UI.text "Ergebnisse"]
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
     score <- UI.div #. "score" #+
         [ UI.p #. "scores-heading" # set UI.text ("Punkte")
-        , UI.span #. "scores" #+
+        , UI.span #. "scores" # set UI.text "Spieler 1: " #+
             [ element score1 ]
-        , UI.span #. "scores" #+
+        , UI.span #. "scores" # set UI.text "Spieler 2: " #+
             [ element score2 ]
-        , UI.span #. "scores" #+
+        , UI.span #. "scores" # set UI.text "Spieler 3: " #+
             [ element score3 ]
-        , UI.span #. "scores" #+
+        , UI.span #. "scores" # set UI.text "Spieler 4: " #+
             [ element score4 ]
         ]
 
@@ -133,8 +141,6 @@ mkDisplay = do
 
     -- click button submit
     on UI.click submit $ \_ -> do
-
-
 
         city1 <- get value inputCity1
         city2 <- get value inputCity2
@@ -188,10 +194,13 @@ mkDisplay = do
         element score3 # set UI.value (show newScore3)
         element score4 # set UI.value (show newScore4)
 
+        randomLetter <- liftIO (getRandomChar)
+        let letterString = [randomLetter]
 
+        element letter # set UI.value letterString
 
         element result #+
-            [ UI.h5 #. "header-result" # set UI.text "Ergebnis"
+            [ UI.h5 #. "header-result"
             , UI.table #. "result-table" #+
                 [ UI.tr #+
                     [ UI.th #. "player"
@@ -283,6 +292,7 @@ mkDisplay = do
     UI.div #. "main_content" #+
         [ element result
         , element score
+        , element letter
         , element table
         , element submit
         ]

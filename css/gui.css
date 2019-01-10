@@ -7,8 +7,15 @@ table {
     margin: 25px 0;
 }
 
-.scores {
-    margin-right: 15px;
+input.score-field {
+    width: 15% !important;
+    display: inline !important;
+    background: white !important;
+    border: 0px;
+    margin-right: 4%;
+    border-width: 0px !important;
+    box-shadow: none !important;
+    font-size: 16px !important;
 }
 
 .scores-heading {
@@ -34,9 +41,7 @@ td.input-field {
 }
 
 .header-result {
-    margin-top: 35px;
     border-top: 1px solid #d1d1d1;
-    padding-top: 25px;
 }
 
 input {

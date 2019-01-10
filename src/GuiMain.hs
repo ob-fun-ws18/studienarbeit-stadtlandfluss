@@ -188,17 +188,7 @@ mkDisplay = do
         element score3 # set UI.value (show newScore3)
         element score4 # set UI.value (show newScore4)
 
-        element score #+
-            [ UI.p #. "scores-heading" # set UI.text "Punkte"
-            , UI.span #. "scores" #+
-                [ element score1 ]
-            , UI.span #. "scores" #+
-                [ element score2 ]
-            , UI.span #. "scores" #+
-                [ element score3 ]
-            , UI.span #. "scores" #+
-                [ element score4 ]
-            ]
+
 
         element result #+
             [ UI.h5 #. "header-result" # set UI.text "Ergebnis"
@@ -292,7 +282,7 @@ mkDisplay = do
     -- visual style
     UI.div #. "main_content" #+
         [ element result
-        , element table
         , element score
+        , element table
         , element submit
         ]

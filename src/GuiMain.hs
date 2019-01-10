@@ -1,5 +1,7 @@
 module GuiMain where
 
+import Data.IORef
+
 import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
 import GameLogic
@@ -110,8 +112,13 @@ mkDisplay = do
 
     -- click button submit
     on UI.click submit $ \_ -> do
-        -- hier auf IO aendern
-        let cities = checkCity [get value inputCity1, get value inputCity2, get value inputCity3, get value inputCity4]
+
+        city1 <- get value inputCity1
+        city2 <- get value inputCity2
+        city3 <- get value inputCity3
+        city4 <- get value inputCity4
+
+        let cities = checkCityIo [city1, city2, city3, city4]
         let countries = checkCountry [get value inputCountry1, get value inputCountry2, get value inputCountry3, get value inputCountry4]
         let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
 

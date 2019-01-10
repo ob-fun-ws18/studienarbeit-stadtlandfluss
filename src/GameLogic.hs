@@ -8,6 +8,8 @@ and it allows the scoring of answers.
 
 module GameLogic where --(checkCity, checkCountry, checkRiver, currentScores) where
 
+import Data.IORef
+
 import qualified Graphics.UI.Threepenny      as UI
 import           Graphics.UI.Threepenny.Core
 
@@ -18,7 +20,7 @@ import Data.Maybe
 -- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt). For others see bing api doc
 
 -- TODO: replace by ...Io version
-checkCity :: [string] -> [(Int, String)]
+checkCity :: [String] -> [(Int, String)]
 checkCity cities = [(42, "high"), (0, "invalid"), (20, "high"), (10, "low")]
 
 -- TODO: replace by ...Io version
@@ -41,7 +43,7 @@ checkCountryIo answers =  mapM (evaluateAnswer "CountryRegion" answers) answers
 
 -- | Checks and scores a list of answers for the city type
 checkCityIo :: [String] -- ^ List of all answers given
-            -> IO [ (Int, String)] -- ^ Score and likelihood of every Answer
+            -> IO [(Int, String)] -- ^ Score and likelihood of every Answer
 checkCityIo answers =  mapM (evaluateAnswer "PopulatedPlace" answers) answers
 
 -- | Evaluates how likely a given answer is to be correct and how many points it should be worth
@@ -93,5 +95,6 @@ calcBonusFactor query allQueries | length (filter (== query) allQueries) > 1 = 1
 
 
 currentScores :: [Int]
-currentScores = [300, 0, 42, 30]
+currentScores = [0, 0, 0, 0]
 -- TODO: Find out a good way to store scores
+

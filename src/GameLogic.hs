@@ -19,32 +19,20 @@ import Data.Maybe
 
 -- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt). For others see bing api doc
 
--- TODO: replace by ...Io version
-checkCity :: [String] -> [(Int, String)]
-checkCity cities = [(42, "high"), (0, "invalid"), (20, "high"), (10, "low")]
-
--- TODO: replace by ...Io version
-checkCountry :: [string] -> [(Int, String)]
-checkCountry cities = [(42, "high"), (0, "invalid"), (20, "high"), (10, "low")]
-
--- TODO: replace by ...Io version
-checkRiver :: [string] -> [(Int, String)]
-checkRiver cities = [(42, "high"), (0, "invalid"), (20, "high"), (10, "low")]
-
 -- | Checks and scores a list of answers for the river type
-checkRiverIo :: [String] -- ^ List of all answers given
+checkRiver :: [String] -- ^ List of all answers given
              -> IO [ (Int, String)] -- ^ Score and likelihood of every answer
-checkRiverIo answers =  mapM (evaluateAnswer "River" answers) answers
+checkRiver answers =  mapM (evaluateAnswer "River" answers) answers
 
 -- | Checks and scores a list of answers for the country type
-checkCountryIo :: [String] -- ^ List of all answers given
+checkCountry :: [String] -- ^ List of all answers given
                -> IO [ (Int, String)] -- ^ Score and likelihood of every Answer
-checkCountryIo answers =  mapM (evaluateAnswer "CountryRegion" answers) answers
+checkCountry answers =  mapM (evaluateAnswer "CountryRegion" answers) answers
 
 -- | Checks and scores a list of answers for the city type
-checkCityIo :: [String] -- ^ List of all answers given
+checkCity :: [String] -- ^ List of all answers given
             -> IO [(Int, String)] -- ^ Score and likelihood of every Answer
-checkCityIo answers =  mapM (evaluateAnswer "PopulatedPlace" answers) answers
+checkCity answers =  mapM (evaluateAnswer "PopulatedPlace" answers) answers
 
 -- | Evaluates how likely a given answer is to be correct and how many points it should be worth
 -- Uses the Rest API to get all Locations matching the Answer.

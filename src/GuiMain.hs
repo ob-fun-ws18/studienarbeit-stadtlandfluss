@@ -118,7 +118,7 @@ mkDisplay = do
         city3 <- get value inputCity3
         city4 <- get value inputCity4
 
-        let cities = checkCityIo [city1, city2, city3, city4]
+        let cities = checkCity [city1, city2, city3, city4]
         let countries = checkCountry [get value inputCountry1, get value inputCountry2, get value inputCountry3, get value inputCountry4]
         let rivers = checkRiver [get value inputRiver1, get value inputRiver2, get value inputRiver3, get value inputRiver4]
 

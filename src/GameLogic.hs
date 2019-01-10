@@ -17,8 +17,8 @@ import MapApi
 import Data.Maybe
 import Test.RandomStrings
 
-
-getRandomChar :: IO Char
+-- | Generates a random uppercase Char
+getRandomChar :: IO Char -- ^ Random uppercase char
 getRandomChar = onlyAlpha' 1 randomASCII
 
 -- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt). For others see bing api doc

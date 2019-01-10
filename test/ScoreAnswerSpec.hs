@@ -12,7 +12,7 @@ spec :: Spec
 spec = describe "scoreAnswer" $ do
         it "gives 0 points if no location is found" $
             fst (scoreAnswer "River" [] "" ["", "isar", "donau"]) `shouldBe` 0
-        it "Gives confidence 'Invalid' if no location is found" $
+        it "gives confidence 'Invalid' if no location is found" $
             snd (scoreAnswer "River" [] "" ["", "isar", "donau"]) `shouldBe` "Invalid"
         it "gives 0 points for a answer of wrong type" $
             fst (scoreAnswer

@@ -55,7 +55,20 @@ mkDisplay = do
     inputRiver3 <- UI.input # set (attr "placeholder") "Fluss"
     inputRiver4 <- UI.input # set (attr "placeholder") "Fluss"
 
+    -- scores
     score1 <- UI.input
+        # set UI.enabled False
+        # set UI.value "0"
+
+    score2 <- UI.input
+        # set UI.enabled False
+        # set UI.value "0"
+
+    score3 <- UI.input
+        # set UI.enabled False
+        # set UI.value "0"
+
+    score4 <- UI.input
         # set UI.enabled False
         # set UI.value "0"
 
@@ -64,12 +77,15 @@ mkDisplay = do
     randomLetterButton <- UI.button # set UI.text "Buchstabe bestimmen"
 
     score <- UI.div #. "score" #+
-        [ UI.p #. "scores-heading" # set UI.text ("Runde 1")
+        [ UI.p #. "scores-heading" # set UI.text ("Punkte")
         , UI.span #. "scores" #+
             [ element score1 ]
-        , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!1)))
-        , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
-        , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
+        , UI.span #. "scores" #+
+            [ element score2 ]
+        , UI.span #. "scores" #+
+            [ element score3 ]
+        , UI.span #. "scores" #+
+            [ element score4 ]
         ]
 
     table <- UI.table #. "input-table" #+
@@ -141,18 +157,47 @@ mkDisplay = do
 
         oldScore1 <- get value score1
         let oldScoreInt1 = read oldScore1 :: Int
-        let plusPoints1 = fst (head cities) :: Int
-        let newScore1 = oldScoreInt1 + plusPoints1
+        let cityPoints1 = fst (head cities) :: Int
+        let countryPoints1 = fst (head countries) :: Int
+        let riverPoints1 = fst (head rivers) :: Int
+        let newScore1 = oldScoreInt1 + cityPoints1 + countryPoints1 + riverPoints1
+
+        oldScore2 <- get value score2
+        let oldScoreInt2 = read oldScore2 :: Int
+        let cityPoints2 = fst (cities!!1) :: Int
+        let countryPoints2 = fst (countries!!1) :: Int
+        let riverPoints2 = fst (rivers!!1) :: Int
+        let newScore2 = oldScoreInt2 + cityPoints2 + countryPoints2 + riverPoints2
+
+        oldScore3 <- get value score3
+        let oldScoreInt3 = read oldScore3 :: Int
+        let cityPoints3 = fst (cities!!2) :: Int
+        let countryPoints3 = fst (countries!!2) :: Int
+        let riverPoints3 = fst (rivers!!2) :: Int
+        let newScore3 = oldScoreInt3 + cityPoints3 + countryPoints3 + riverPoints3
+
+        oldScore4 <- get value score4
+        let oldScoreInt4 = read oldScore4 :: Int
+        let cityPoints4 = fst (cities!!3) :: Int
+        let countryPoints4 = fst (countries!!3) :: Int
+        let riverPoints4 = fst (rivers!!3) :: Int
+        let newScore4 = oldScoreInt4 + cityPoints4 + countryPoints4 + riverPoints4
 
         element score1 # set UI.value (show newScore1)
+        element score2 # set UI.value (show newScore2)
+        element score3 # set UI.value (show newScore3)
+        element score4 # set UI.value (show newScore4)
 
         element score #+
-            [ UI.p #. "scores-heading" # set UI.text "Runde 2"
+            [ UI.p #. "scores-heading" # set UI.text "Punkte"
             , UI.span #. "scores" #+
                 [ element score1 ]
-            , UI.span #. "scores" # set UI.text ("Spieler 2 Punkte: " ++(show (currentScores!!1)))
-            , UI.span #. "scores" # set UI.text ("Spieler 3 Punkte: " ++(show (currentScores!!2)))
-            , UI.span #. "scores" # set UI.text ("Spieler 4 Punkte: " ++(show (currentScores!!3)))
+            , UI.span #. "scores" #+
+                [ element score2 ]
+            , UI.span #. "scores" #+
+                [ element score3 ]
+            , UI.span #. "scores" #+
+                [ element score4 ]
             ]
 
         element result #+
@@ -246,8 +291,8 @@ mkDisplay = do
 
     -- visual style
     UI.div #. "main_content" #+
-        [ element score
-        , element result
+        [ element result
         , element table
+        , element score
         , element submit
         ]

@@ -308,6 +308,21 @@ mkDisplay = do
                 ]
             ]
 
+        element inputCity1 # set UI.value ""
+        element inputCity2 # set UI.value ""
+        element inputCity3 # set UI.value ""
+        element inputCity4 # set UI.value ""
+
+        element inputCountry1 # set UI.value ""
+        element inputCountry2 # set UI.value ""
+        element inputCountry3 # set UI.value ""
+        element inputCountry4 # set UI.value ""
+
+        element inputRiver1 # set UI.value ""
+        element inputRiver2 # set UI.value ""
+        element inputRiver3 # set UI.value ""
+        element inputRiver4 # set UI.value ""
+
     -- visual style
     UI.div #. "main_content" #+
         [ element result

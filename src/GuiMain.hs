@@ -56,7 +56,7 @@ mkDisplay = do
     inputRiver4 <- UI.input # set (attr "placeholder") "Fluss"
 
     -- get a random letter which the players have to use for the first round
-    randomLetter <- liftIO (getRandomChar)
+    randomLetter <- liftIO getRandomChar
     let letterString = [randomLetter]
 
     -- define the score fields and set them to 0 for the first round
@@ -82,7 +82,7 @@ mkDisplay = do
 
     -- define the letter field and set it to the random letter defined above for the first round
     letterField <- UI.div #. "letter" #+
-        [ UI.p #. "letter-heading" # set UI.text ("Buchstabe")
+        [ UI.p #. "letter-heading" # set UI.text "Buchstabe"
         , element letter
         ]
 
@@ -95,7 +95,7 @@ mkDisplay = do
 
     -- a score div container where score fields are added to
     score <- UI.div #. "score" #+
-        [ UI.p #. "scores-heading" # set UI.text ("Punkte")
+        [ UI.p #. "scores-heading" # set UI.text "Punkte"
         , UI.span #. "scores" # set UI.text "Spieler 1: " #+
             [ element score1 ]
         , UI.span #. "scores" # set UI.text "Spieler 2: " #+
@@ -217,7 +217,7 @@ mkDisplay = do
         element score4 # set UI.value (show newScore4)
 
         -- define a new random letter for the next round
-        randomLetter <- liftIO (getRandomChar)
+        randomLetter <- liftIO getRandomChar
         let letterString = [randomLetter]
 
         -- update the letter field

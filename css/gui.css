@@ -16,9 +16,15 @@ input.score-field {
     border-width: 0px !important;
     box-shadow: none !important;
     font-size: 16px !important;
+    padding: 0 !important;
 }
 
 .scores-heading {
+    margin-right: 25px;
+    font-weight: bold;
+}
+
+.letter-heading {
     margin-right: 25px;
     font-weight: bold;
 }
@@ -49,15 +55,22 @@ input {
 }
 
 .points {
-    width: 40%;
     display: inline-block;
-    background: #ddeaff
+    background: #ddeaff;
+    width: 21%;
 }
 .possibility {
-    width: 60%;
     display: inline-block;
     background: #feffe2;
+    width: 55%;
 }
+
+.input {
+    display: inline-block;
+    background: #ffaaaa;
+    width: 24%;
+}
+
 
 .player {
     background: #e5e5e5;

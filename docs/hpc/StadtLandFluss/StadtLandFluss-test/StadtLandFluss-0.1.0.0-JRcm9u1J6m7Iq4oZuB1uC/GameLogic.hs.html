@@ -1,0 +1,115 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="decl"><span class="nottickedoff">never executed</span> <span class="tickonlytrue">always true</span> <span class="tickonlyfalse">always false</span></span>
+</pre>
+<pre>
+<span class="lineno">    1 </span>{-|
+<span class="lineno">    2 </span>Module      : GameLogic
+<span class="lineno">    3 </span>Description : Contains functions to score possible Answers
+<span class="lineno">    4 </span>
+<span class="lineno">    5 </span>This module contains the &quot;Brain&quot; of the Game. It allows input to be checked using the MapApi Lib
+<span class="lineno">    6 </span>and it allows the scoring of answers.
+<span class="lineno">    7 </span>-}
+<span class="lineno">    8 </span>
+<span class="lineno">    9 </span>module GameLogic where --(checkCity, checkCountry, checkRiver, currentScores) where
+<span class="lineno">   10 </span>
+<span class="lineno">   11 </span>import Data.IORef
+<span class="lineno">   12 </span>
+<span class="lineno">   13 </span>import qualified Graphics.UI.Threepenny      as UI
+<span class="lineno">   14 </span>import           Graphics.UI.Threepenny.Core
+<span class="lineno">   15 </span>
+<span class="lineno">   16 </span>import MapApi
+<span class="lineno">   17 </span>import Data.Maybe
+<span class="lineno">   18 </span>import Test.RandomStrings
+<span class="lineno">   19 </span>
+<span class="lineno">   20 </span>-- | Generates a random uppercase Char
+<span class="lineno">   21 </span>getRandomChar :: IO Char -- ^ Random uppercase char
+<span class="lineno">   22 </span><span class="decl"><span class="nottickedoff">getRandomChar = onlyAlpha' 1 randomASCII</span></span>
+<span class="lineno">   23 </span>
+<span class="lineno">   24 </span>-- Valid types are: CountryRegion (Land), River (Fluss), PopulatedPlace (Stadt). For others see bing api doc
+<span class="lineno">   25 </span>
+<span class="lineno">   26 </span>-- | Checks and scores a list of answers for the river type
+<span class="lineno">   27 </span>checkRiver :: [String] -- ^ List of all answers given
+<span class="lineno">   28 </span>             -&gt; IO [ (Int, String)] -- ^ Score and likelihood of every answer
+<span class="lineno">   29 </span><span class="decl"><span class="nottickedoff">checkRiver answers =  mapM (evaluateAnswer &quot;River&quot; answers) answers</span></span>
+<span class="lineno">   30 </span>
+<span class="lineno">   31 </span>-- | Checks and scores a list of answers for the country type
+<span class="lineno">   32 </span>checkCountry :: [String] -- ^ List of all answers given
+<span class="lineno">   33 </span>               -&gt; IO [ (Int, String)] -- ^ Score and likelihood of every Answer
+<span class="lineno">   34 </span><span class="decl"><span class="nottickedoff">checkCountry answers =  mapM (evaluateAnswer &quot;CountryRegion&quot; answers) answers</span></span>
+<span class="lineno">   35 </span>
+<span class="lineno">   36 </span>-- | Checks and scores a list of answers for the city type
+<span class="lineno">   37 </span>checkCity :: [String] -- ^ List of all answers given
+<span class="lineno">   38 </span>            -&gt; IO [(Int, String)] -- ^ Score and likelihood of every Answer
+<span class="lineno">   39 </span><span class="decl"><span class="nottickedoff">checkCity answers =  mapM (evaluateAnswer &quot;PopulatedPlace&quot; answers) answers</span></span>
+<span class="lineno">   40 </span>
+<span class="lineno">   41 </span>-- | Evaluates how likely a given answer is to be correct and how many points it should be worth
+<span class="lineno">   42 </span>-- Uses the Rest API to get all Locations matching the Answer.
+<span class="lineno">   43 </span>evaluateAnswer :: String -- ^ The entity type of the answer CountryRegion | River | PopulatedPlace
+<span class="lineno">   44 </span>               -&gt; [String] -- ^ List of all Answers to determine score multiplier
+<span class="lineno">   45 </span>               -&gt; String -- ^ The given Answer which will be scored
+<span class="lineno">   46 </span>               -&gt; IO (Int, String) -- ^ Score and likelihood
+<span class="lineno">   47 </span><span class="decl"><span class="nottickedoff">evaluateAnswer queryType allQueries query =</span>
+<span class="lineno">   48 </span><span class="spaces">        </span><span class="nottickedoff">do locations &lt;- getLocation query</span>
+<span class="lineno">   49 </span><span class="spaces">           </span><span class="nottickedoff">return (scoreAnswer queryType locations query allQueries)</span></span>
+<span class="lineno">   50 </span>
+<span class="lineno">   51 </span>-- | Score a answer based on given locations
+<span class="lineno">   52 </span>scoreAnswer :: String -- ^ Entity Type which the location should have
+<span class="lineno">   53 </span>            -&gt; [Location] -- ^ List of locations matching the query
+<span class="lineno">   54 </span>            -&gt; String -- ^ Query / Answer to be scored
+<span class="lineno">   55 </span>            -&gt; [String] -- ^ All Answers used for score multiplier
+<span class="lineno">   56 </span>            -&gt; (Int, String) -- ^ Score and likelihood
+<span class="lineno">   57 </span><span class="decl"><span class="istickedoff">scoreAnswer queryType locs query allQueries</span>
+<span class="lineno">   58 </span><span class="spaces">    </span><span class="istickedoff">= let loc = bestMatch queryType locs</span>
+<span class="lineno">   59 </span><span class="spaces">          </span><span class="istickedoff">conf = maybe &quot;Invalid&quot; <span class="nottickedoff">confidence</span> loc</span>
+<span class="lineno">   60 </span><span class="spaces">          </span><span class="istickedoff">points = maybe 0 (const 5) loc</span>
+<span class="lineno">   61 </span><span class="spaces">          </span><span class="istickedoff">bonusFactor = calcBonusFactor query allQueries</span>
+<span class="lineno">   62 </span><span class="spaces">      </span><span class="istickedoff">in (points * bonusFactor, conf)</span></span>
+<span class="lineno">   63 </span>
+<span class="lineno">   64 </span>-- | Filter a sorted List of locations for the best match in a given entity Type
+<span class="lineno">   65 </span>bestMatch :: String -- ^ Entity type which the result MUST match
+<span class="lineno">   66 </span>          -&gt; [Location] -- ^ List of all Locations
+<span class="lineno">   67 </span>          -&gt; Maybe Location -- ^ Best Match for given type, nothing if no result for given type was found
+<span class="lineno">   68 </span><span class="decl"><span class="istickedoff">bestMatch expectedType locations = listToMaybe (filter (isType expectedType) locations)</span></span>
+<span class="lineno">   69 </span>
+<span class="lineno">   70 </span>-- | determine if Location type matches
+<span class="lineno">   71 </span>isType :: String -- ^ Name of the type expected
+<span class="lineno">   72 </span>       -&gt; Location -- ^ Location to be checked
+<span class="lineno">   73 </span>       -&gt; Bool -- ^ true if entityType is as expected
+<span class="lineno">   74 </span><span class="decl"><span class="istickedoff">isType expetected location = entityType location == expetected</span></span>
+<span class="lineno">   75 </span>
+<span class="lineno">   76 </span>-- | Calculates a score multiplier for a given Answer
+<span class="lineno">   77 </span>-- 4: if only one non empty answer was given. (No one else answered in that category)
+<span class="lineno">   78 </span>-- 2: The answer is unique. (There where other answers, but not equal answers)
+<span class="lineno">   79 </span>-- 1: The answer was given multiple times.
+<span class="lineno">   80 </span>-- Note: Empty answers will get score multipliers too, but since they will receive 0 points the multiplier does not matter
+<span class="lineno">   81 </span>calcBonusFactor :: String -- ^ Answer for which the multiplier is calculated
+<span class="lineno">   82 </span>                -&gt; [String] -- ^ List of all Answers (including the one being evaluated)
+<span class="lineno">   83 </span>                -&gt; Int -- ^ Score multiplier (1 | 2 | 4)
+<span class="lineno">   84 </span><span class="decl"><span class="istickedoff">calcBonusFactor query allQueries | length (filter (== query) allQueries) &gt; 1 = 1 -- Duplicate answer</span>
+<span class="lineno">   85 </span><span class="spaces">                                 </span><span class="istickedoff">| length (filter (== &quot;&quot;) allQueries) == length allQueries - 1 = 4 -- Only answer</span>
+<span class="lineno">   86 </span><span class="spaces">                                 </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = 2</span></span> -- Unique answer
+<span class="lineno">   87 </span>
+<span class="lineno">   88 </span>
+<span class="lineno">   89 </span>currentScores :: [Int]
+<span class="lineno">   90 </span><span class="decl"><span class="nottickedoff">currentScores = [0, 0, 0, 0]</span></span>
+<span class="lineno">   91 </span>-- TODO: Find out a good way to store scores
+<span class="lineno">   92 </span>
+
+</pre>
+</body>
+</html>

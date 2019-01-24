@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="decl"><span class="nottickedoff">never executed</span> <span class="tickonlytrue">always true</span> <span class="tickonlyfalse">always false</span></span>
+</pre>
+<pre>
+<span class="lineno">    1 </span>
+<span class="lineno">    2 </span>{-# LANGUAGE OverloadedStrings #-}
+<span class="lineno">    3 </span>{-|
+<span class="lineno">    4 </span>Module      : MapApi
+<span class="lineno">    5 </span>Description : Contains functions to access the Bing Map Api
+<span class="lineno">    6 </span>
+<span class="lineno">    7 </span>This module handles accessing the Bing Maps api to return Locations for a given Query.
+<span class="lineno">    8 </span>-}
+<span class="lineno">    9 </span>module MapApi (Location(..), getLocation) where
+<span class="lineno">   10 </span>
+<span class="lineno">   11 </span>import System.Environment -- to get environment variables
+<span class="lineno">   12 </span>import Data.Text -- to pack strings to pass into lib functions
+<span class="lineno">   13 </span>
+<span class="lineno">   14 </span>import Network.Wreq -- Main REST request lib
+<span class="lineno">   15 </span>import Control.Lens -- Lib used to access results from requests
+<span class="lineno">   16 </span>import Data.Aeson.Lens -- Json Access
+<span class="lineno">   17 </span>
+<span class="lineno">   18 </span>-- | Location describing a rest request result
+<span class="lineno">   19 </span>data Location = Location { <span class="istickedoff"><span class="decl"><span class="istickedoff">name</span></span></span> :: String, -- ^ Name of the location found
+<span class="lineno">   20 </span>                        <span class="istickedoff"><span class="decl"><span class="istickedoff">entityType</span></span></span> :: String, -- ^ Entitiy Type of the location (e.g. River)
+<span class="lineno">   21 </span>                        <span class="nottickedoff"><span class="decl"><span class="nottickedoff">confidence</span></span></span> :: String -- ^ how confident the Api was that this is the correct result (low, medium or high)
+<span class="lineno">   22 </span>                        }
+<span class="lineno">   23 </span>
+<span class="lineno">   24 </span>-- Print a location result
+<span class="lineno">   25 </span>instance Show Location where
+<span class="lineno">   26 </span>    <span class="decl"><span class="nottickedoff">show (Location name entityType confidence) = &quot;{&quot; ++ name ++ &quot; (&quot; ++ entityType ++ &quot;, Confidence: &quot; ++ confidence ++ &quot;)}&quot;</span></span>
+<span class="lineno">   27 </span>
+<span class="lineno">   28 </span>
+<span class="lineno">   29 </span>-- | Main node of the rest request
+<span class="lineno">   30 </span>mapsUrl :: String
+<span class="lineno">   31 </span><span class="decl"><span class="nottickedoff">mapsUrl = &quot;http://dev.virtualearth.net/REST/v1/Locations&quot;</span></span>
+<span class="lineno">   32 </span>
+<span class="lineno">   33 </span>-- | Get a list of all matches for the given query string
+<span class="lineno">   34 </span>getLocation :: String -- ^ Query to be searched
+<span class="lineno">   35 </span>            -&gt; IO [Location] -- ^ List of all locations returned from the api. Can be empty
+<span class="lineno">   36 </span><span class="decl"><span class="nottickedoff">getLocation query  = if query == &quot;&quot;</span>
+<span class="lineno">   37 </span><span class="spaces">                        </span><span class="nottickedoff">then return []</span>
+<span class="lineno">   38 </span><span class="spaces">                        </span><span class="nottickedoff">else</span>
+<span class="lineno">   39 </span><span class="spaces">                            </span><span class="nottickedoff">do</span>
+<span class="lineno">   40 </span><span class="spaces">                                </span><span class="nottickedoff">apiKey &lt;- getEnv &quot;BING_API_KEY&quot;</span>
+<span class="lineno">   41 </span><span class="spaces">                                </span><span class="nottickedoff">let opts = defaults &amp; param &quot;query&quot; .~ [pack query]</span>
+<span class="lineno">   42 </span><span class="spaces">                                                    </span><span class="nottickedoff">&amp; param &quot;key&quot; .~ [pack apiKey]</span>
+<span class="lineno">   43 </span><span class="spaces">                                                    </span><span class="nottickedoff">&amp; param &quot;c&quot; .~ [pack &quot;de&quot;]</span>
+<span class="lineno">   44 </span><span class="spaces">                                                    </span><span class="nottickedoff">&amp; param &quot;userRegion&quot; .~ [pack &quot;DE&quot;]</span>
+<span class="lineno">   45 </span><span class="spaces">                                                    </span><span class="nottickedoff">&amp; param &quot;userLocation&quot; .~ [pack &quot;48.153737,11.552366&quot;]</span>
+<span class="lineno">   46 </span><span class="spaces">                                </span><span class="nottickedoff">response &lt;- getWith opts mapsUrl</span>
+<span class="lineno">   47 </span><span class="spaces">                                </span><span class="nottickedoff">let numResult = fromIntegral (Prelude.head (numberOfResources response))</span>
+<span class="lineno">   48 </span><span class="spaces">                                    </span><span class="nottickedoff">range =  [0..numResult-1]</span>
+<span class="lineno">   49 </span><span class="spaces">                                </span><span class="nottickedoff">return (Prelude.map (readLocation response) range)</span></span>
+<span class="lineno">   50 </span>
+<span class="lineno">   51 </span>-- | Read in all relevant info from the given json to a Location Data object
+<span class="lineno">   52 </span><span class="decl"><span class="nottickedoff">readLocation response index = Location</span>
+<span class="lineno">   53 </span><span class="spaces">                                </span><span class="nottickedoff">(unpack (readName response index))</span>
+<span class="lineno">   54 </span><span class="spaces">                                </span><span class="nottickedoff">(unpack (readEntityType response index))</span>
+<span class="lineno">   55 </span><span class="spaces">                                </span><span class="nottickedoff">(unpack (readConfidence response index))</span></span>
+<span class="lineno">   56 </span>
+<span class="lineno">   57 </span>-- Access functions for Location-json fields
+<span class="lineno">   58 </span>-- These are not typed because the types rely on the Json implementation which might vary
+<span class="lineno">   59 </span>
+<span class="lineno">   60 </span>-- | Read the name of the nth Location from the response body
+<span class="lineno">   61 </span><span class="decl"><span class="nottickedoff">readName response index = response ^. responseBody . key &quot;resourceSets&quot; . nth 0 . key &quot;resources&quot; . nth index . key &quot;name&quot; . _String</span></span>
+<span class="lineno">   62 </span>
+<span class="lineno">   63 </span>-- | Read the entity ype of the nth Location from the response body
+<span class="lineno">   64 </span><span class="decl"><span class="nottickedoff">readEntityType response index =  response ^. responseBody . key &quot;resourceSets&quot; . nth 0 . key &quot;resources&quot; . nth index . key &quot;entityType&quot; . _String</span></span>
+<span class="lineno">   65 </span>
+<span class="lineno">   66 </span>-- | Read the confidence of the nth Location from the response body
+<span class="lineno">   67 </span><span class="decl"><span class="nottickedoff">readConfidence response index =  response ^. responseBody . key &quot;resourceSets&quot; . nth 0 . key &quot;resources&quot; . nth index . key &quot;confidence&quot; . _String</span></span>
+<span class="lineno">   68 </span>
+<span class="lineno">   69 </span>-- | Read the info field in which the number of given responses is stored
+<span class="lineno">   70 </span><span class="decl"><span class="nottickedoff">numberOfResources response = response ^.. responseBody . key &quot;resourceSets&quot; . nth 0 . key &quot;estimatedTotal&quot;  . _Integer</span></span>
+<span class="lineno">   71 </span>
+<span class="lineno">   72 </span>
+
+</pre>
+</body>
+</html>
